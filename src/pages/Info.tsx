@@ -2,10 +2,12 @@ import { useSelector } from 'react-redux'
 import { UsersZ } from '../Zustand/Zustand'
 import { Button } from '../components/ui/button'
 import { useNavigate, useParams } from 'react-router'
+import { useState } from 'react'
 
 export default function Info() {
   const navigate = useNavigate()
   const { id } = useParams()
+  const [datag,setData]=useState([])
   const data = useSelector((state) => state.Users.data)
   const { dataZ } = UsersZ((state) => state)
 
