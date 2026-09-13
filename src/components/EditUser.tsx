@@ -1,7 +1,6 @@
 import { Button } from "./ui/button"
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogFooter,
   DialogHeader,
@@ -13,17 +12,20 @@ import { Label } from "./ui/label"
 import { UsersZ } from "../Zustand/Zustand"
 import { useDispatch } from "react-redux"
 import { editUser } from "../store/UsersSlice"
+import type { EditUserProps } from "../types"
+import type { AppDispatch } from "../store/store"
+import type { FormEvent } from "react"
 
-export function EditUser(props) {
-  let {open,setOpen,name,setName,age,setAge,pz,setPz,phone,setPhone,sname,setSname,id,}=props
+export function EditUser(props: EditUserProps) {
+  const {open,setOpen,name,setName,age,setAge,pz,setPz,phone,setPhone,sname,setSname,id} = props
   const { editUserz } = UsersZ((state) => state)
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
 
-  const handelSubmit = (e) => {
+  const handelSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    dispatch(editUser({id:id,surename:sname,pazishen:pz,phone:phone}))
-    editUserz({id:id,name:name,age:age})    
-    e.target.reset()
+    dispatch(editUser({id:id!,surename:sname,pazishen:pz,phone:Number(phone)}))
+    editUserz({id:id!,name:name,age:Number(age)})    
+    e.currentTarget.reset()
     setOpen(false)
   }
 
@@ -49,7 +51,7 @@ export function EditUser(props) {
             </Field>
             <Field>
               <Label htmlFor="phone-1">Phone</Label>
-              <Input id="phone-1" name="phone" value={phone} onChange={((e)=>setPhone(e.target.value))} />
+              <Input id="phone-1" name="phone" value={phone ?? ''} onChange={((e)=>setPhone(e.target.value))} />
             </Field>
             <Field>
               <Label htmlFor="pazishen-1">Position</Label>
@@ -57,7 +59,7 @@ export function EditUser(props) {
             </Field>
           </FieldGroup>
           <DialogFooter>
-              <Button type="button" >
+              <Button type="button" onClick={()=>setOpen(false)}>
                 Cancel
               </Button>
             <Button type="submit">Save</Button>

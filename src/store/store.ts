@@ -1,8 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit'
-import  UsersSlice  from './UsersSlice'
+import UsersSlice from './UsersSlice'
+import type { RootState } from '../types'
 
-export default configureStore({
+const store = configureStore({
   reducer: {
     Users:UsersSlice
   }
 })
+
+export type AppDispatch = typeof store.dispatch
+export type { RootState }
+
+export default store

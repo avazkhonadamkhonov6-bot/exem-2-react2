@@ -12,25 +12,39 @@ import { Label } from "./ui/label"
 import { UsersZ } from "../Zustand/Zustand"
 import { useDispatch } from "react-redux"
 import { addUser } from "../store/UsersSlice"
+import type { AddUserProps, ReduxUser } from "../types"
+import type { AppDispatch } from "../store/store"
+import type { FormEvent } from "react"
 
-export function AddUser({ open, setOpen }) {
+export function AddUser({ open, setOpen }: AddUserProps) {
   const { addUSerz } = UsersZ((state) => state)
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
 
-  const handelSubmit = (e) => {
+  const handelSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const newUser = {
-      id: Date.now(),
-      name: e.target.name.value,
-      pazishen: e.target.pazishen.value,
-      surename: e.target.surename.value,
-      age: e.target.age.value,
-      phone: e.target.phone.value,
-      status: e.target.status.value === "true", 
+    const form = e.target as HTMLFormElement
+    const getVal = (name: string): string => {
+      const el = form.elements.namedItem(name)
+      if (el instanceof HTMLInputElement || el instanceof HTMLSelectElement) return el.value
+      return ''
+    }
+    const id = Date.now()
+    const nameVal = getVal('name')
+    const surenameVal = getVal('surename')
+    const ageVal = getVal('age')
+    const phoneVal = getVal('phone')
+    const pazishenVal = getVal('pazishen')
+    const statusVal = getVal('status') === "true"
+
+    const newUser: ReduxUser = {
+      id,
+      surename: surenameVal,
+      phone: Number(phoneVal),
+      pazishen: pazishenVal,
     }
     dispatch(addUser(newUser))
-    addUSerz(newUser)    
-    e.target.reset()
+    addUSerz({ id, name: nameVal, age: Number(ageVal), status: statusVal })
+    form.reset()
     setOpen(false)
   }
 

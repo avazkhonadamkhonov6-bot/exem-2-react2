@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { UsersZ } from '../Zustand/Zustand'
 import { Button } from '../components/ui/button'
@@ -6,38 +6,40 @@ import { deleteUser } from '../store/UsersSlice'
 import { AddUser } from '../components/AddUser'
 import { EditUser } from '../components/EditUser'
 import { NavLink } from 'react-router'
+import type { RootState, AppDispatch } from '../store/store'
+import type { MergedUser } from '../types'
 
 export default function Homee() {
-  const data = useSelector((state) => state.Users.data)
+  const data = useSelector((state: RootState) => state.Users.data)
   const { dataZ, deleteUserz } = UsersZ((state) => state)
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
   const [open, setOpen] = useState(false)
   const [openE, setOpenE] = useState(false)
   const [name, setName] = useState('')
   const [age, setAge] = useState('')
   const [pz, setPz] = useState('')
-  const [phone, setPhone] = useState(null)
+  const [phone, setPhone] = useState<string | null>(null)
   const [sname, setSname] = useState('')
-  const [idx, setIdx] = useState(null)
+  const [idx, setIdx] = useState<number | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const dataM = data.map((e) => {
-    const elr = dataZ.find((el) => el.id == e.id)
+  const dataM: MergedUser[] = data.map((e) => {
+    const elr = dataZ.find((el) => el.id === e.id)
     return {
       ...elr,
       ...e,
     }
   })
-  const handelDelete = (id) => {
+  const handelDelete = (id: number) => {
     dispatch(deleteUser(id))
     deleteUserz(id)
   }
-  const handelEdit = (e) => {
-    setName(e.name)
-    setAge(e.age)
-    setSname(e.surename)
-    setPhone(e.phone)
-    setPz(e.pazishen)
-    setIdx(e.id)
+  const handelEdit = (e: MergedUser) => {
+    setName(e.name ?? '')
+    setAge(e.age?.toString() ?? '')
+    setSname(e.surename ?? '')
+    setPhone(e.phone?.toString() ?? null)
+    setPz(e.pazishen ?? '')
+    setIdx(e.id ?? null)
     setOpenE(true)
   }
   const filteredData = dataM.filter((user) =>
@@ -113,7 +115,7 @@ export default function Homee() {
               <Button onClick={() => handelEdit(e)} variant="outline"
                 className="text-slate-600 border-slate-200 hover:bg-slate-50 rounded-lg px-3 py-1.5 text-xs font-semibold"
               >Edit</Button>
-              <Button onClick={() => handelDelete(e.id)}
+              <Button onClick={() => handelDelete(e.id!)}
                 className="bg-rose-50 text-rose-600 hover:bg-rose-100 hover:text-rose-700 border border-rose-100 rounded-lg px-3 py-1.5 text-xs font-semibold shadow-none"
               >Delete</Button>
               <Button className="text-white bg-blue-500" ><NavLink to={`/Info/${e.id}`}>Info</NavLink></Button>

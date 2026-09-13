@@ -1,6 +1,14 @@
 import { create } from 'zustand'
+import type { ZustandUser } from '../types'
 
-export const UsersZ = create((set) => ({
+interface UsersZState {
+  dataZ: ZustandUser[]
+  addUSerz: (newUser: ZustandUser) => void
+  deleteUserz: (id: number) => void
+  editUserz: (upUser: Partial<ZustandUser>) => void
+}
+
+export const UsersZ = create<UsersZState>((set) => ({
  dataZ:[
     {id:1,name:"Hasan",age:16,status:false},
     {id:2,name:"Husan",age:17,status:true},
@@ -15,7 +23,6 @@ export const UsersZ = create((set) => ({
  ],
   addUSerz: (newUser) =>set((state) => ({ dataZ: [...state.dataZ, newUser] })),
   deleteUserz: (id) =>set((state) => ({ dataZ: state.dataZ.filter((e) => e.id !== id) })),
-  editUserz: (upUser) =>set((state) =>({dataZ: state.dataZ.map((e) =>e.id == upUser.id? { ...e, ...upUser }: e ),
+  editUserz: (upUser) =>set((state) =>({dataZ: state.dataZ.map((e) =>e.id === upUser.id? { ...e, ...upUser }: e ),
 })),
-
 }))

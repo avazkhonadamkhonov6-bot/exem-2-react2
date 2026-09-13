@@ -2,13 +2,13 @@ import { useSelector } from 'react-redux'
 import { UsersZ } from '../Zustand/Zustand'
 import { Button } from '../components/ui/button'
 import { useNavigate, useParams } from 'react-router'
-import { useState } from 'react'
+import type { RootState } from '../store/store'
+import type { InfoRowProps } from '../types'
 
 export default function Info() {
   const navigate = useNavigate()
   const { id } = useParams()
-  const [datag,setData]=useState([])
-  const data = useSelector((state) => state.Users.data)
+  const data = useSelector((state: RootState) => state.Users.data)
   const { dataZ } = UsersZ((state) => state)
 
   const userRedux = data.find((e) => e.id === Number(id))
@@ -79,7 +79,7 @@ export default function Info() {
   )
 }
 
-function InfoRow({ label, value }) {
+function InfoRow({ label, value }: InfoRowProps) {
   return (
     <div className="flex items-center justify-between py-2.5 border-b border-slate-50 last:border-0">
       <span className="text-sm text-slate-400 font-medium">{label}</span>
